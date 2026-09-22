@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.messages import constants
-from django.contrib import messages
+from django.contrib import messages, auth
+from django.http import HttpResponse
 
 # Create your views here.
 def cadastro(request):
@@ -27,13 +28,35 @@ def cadastro(request):
                 username=username,
                 password=senha
             )
-            messages.add_message(request, constants.SUCCESS, 'Usuário Cadastrado com sucesso.')
-            return redirect('/usuarios/cadastro/')
+            
+            return redirect('/usuarios/logar/')
         except:
             messages.add_message(request, constants.ERROR, 'Erro interno do servidor.')
             return redirect('/usuarios/cadastro/')
     
 def logar(request):
-    return render(request, 'logar.html')  
+    if request.method == 'GET':
+        return render(request, 'logar.html')
+    elif request.method == 'POST':
+        username = request.POST.get('username')
+        senha = request.POST.get('senha')
+        
+        user = auth.authenticate(request, username=username, password=senha)
+        
+        if user:
+            auth.login(request, user)
+            return redirect('/flashcard/novo_flashcard/')
+        else:
+            messages.add_message(request, constants.ERROR, 'Usuário ou senha inválidos.')
+            return redirect('/usuarios/logar/')
+        
+def logout(request):
+    auth.logout(request)
+    return redirect('/usuarios/logar')      
+      
+    
+        
+        
+      
 
 
