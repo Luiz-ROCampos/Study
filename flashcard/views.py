@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from .models import Categoria, Flashcard
 from django.contrib.messages import constants
@@ -44,4 +45,16 @@ def novo_flashcard(request):
         
         messages.add_message(request, constants.SUCCESS, 'FlashCard cadastrado com sucesso.')
         return redirect('/flashcard/novo_flashcard')
-    
+ 
+def deletar_flashcard(request, id):
+    flashacard = Flashcard.objects.get(id=id)
+    if flashacard.user == request.user:
+        flashacard.delete()
+        messages.add_message(request, constants.SUCCESS, 'FlashCard deletado com sucesso.')
+        return redirect('/flashcard/novo_flashcard/')
+    else:
+        messages.add_message(request, constants.ERROR, 'Erro interno do sistema.')
+        return redirect('/flashcard/novo_flashcard/')
+
+
+   
