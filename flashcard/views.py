@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from .models import Categoria, Flashcard
+from .models import Categoria, Flashcard, Desafio, FlashcardDesafio
 from django.contrib.messages import constants
 from django.contrib import messages
 
@@ -55,6 +55,47 @@ def deletar_flashcard(request, id):
     else:
         messages.add_message(request, constants.ERROR, 'Erro interno do sistema.')
         return redirect('/flashcard/novo_flashcard/')
+
+def iniciar_desafio(request):
+    if request.method == 'GET':
+        categorias = Categoria.objects.all()
+        dificuldades = Flashcard.DIFICULDADE_CHOICES
+        return render(request, 'iniciar_desafio.html', {'categorias': categorias, 'dificuldades': dificuldades})
+    elif request.method == 'POST':
+        titulo = request.POST.get('titulo')
+        categorias = request.POST.getlist('categoria')
+        dificuldade = request.POST.get('dificuldade')
+        qtd_perguntas = request.POST.get('qtd_perguntas')
+        
+        desafio = Desafio(
+            user = request.user,
+            titulo = titulo,
+            quantidade_perguntas = qtd_perguntas,
+            dificuldade = dificuldade
+            
+        )
+        desafio.save()
+        
+        for categoria in categorias:
+            desafio.categoria.aadd(categoria)
+            
+        flashcards = (
+            Flashcard.objects.filter(user=request.user).filter(dificuldade=dificuldade).filter(categoria_id__in=categorias).order_by('?')
+        )
+        if flashcards.count() < int(qtd_perguntas):
+            messages.add_message(request, constants.ERROR, 'Não há essa quntidade de perguntas, tente quantidade menor.')
+            return redirect('/flashcard/inicio_desafio/')
+        
+        flashcards = flashcards[: int(qtd_perguntas)]
+        for flashcard in flashcards:
+            flashcard_desafio = FlashcardDesafio(
+                flashcard = flashcard
+            )
+            flashcard_desafio.save()
+            desafio.flashcards.add(flashcard_desafio)
+
+        return HttpResponse(qtd_perguntas)
+
 
 
    
