@@ -15,6 +15,14 @@
         <br>
         <br>
         <h2 class="fonte-principal">Iniciar desafio</h2>
+        {% if messages %}
+        <br>
+            {% for message in messages %}
+                <section class="alert {{message.tags}}">
+                    {{message}}
+                </section>
+            {% endfor %}
+        {% endif %}
         <p class="fonte-secundaria">Escolha as categorias e a dificuldade do desafio</p>
         <div class="row">
             

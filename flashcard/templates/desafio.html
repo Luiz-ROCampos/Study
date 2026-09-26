@@ -19,8 +19,9 @@
         <div class="row">
             <div class="col-md">
                 <h3 class="fonte-secundaria" >Desafio iniciado</h3>
-                <span class="badge-categoria">Programação</span>
-                <span class="badge-categoria" >Matemática</span>
+                {% for categoria in categorias %}
+                    <span class="badge-categoria">{{categoria}}</span>
+                {% endfor %}
                 <br>
                 <br>
                 <br>
@@ -39,7 +40,7 @@
 
                             {% if not flash.respondido %}
                                 <div class="responder">
-                                    <a href="{% url 'responder_flashcard' flash.id %}?acertou=0&desafio_id={{desafio.id}}"><i class='bx bxs-x-square icone-vermelho'></i></a>
+                                    <a href="{% url 'responder_flashcard' flash.id %}?errou=0&desafio_id={{desafio.id}}"><i class='bx bxs-x-square icone-vermelho'></i></a>
                                     <a href="{% url 'responder_flashcard' flash.id %}?acertou=1&desafio_id={{desafio.id}}"><i class='bx bxs-check-square icone-verde' ></i></a>
                                 </div>
                             {% else %}
@@ -67,7 +68,7 @@
                 <p class="fonte-p">Erros: {{erros}}</p>
                 <p class="fonte-p">Faltantes: {{faltantes}}</p>
                 <br>
-                <a class="btn-cadastro btn-desafio" href="">Relatório detalhado</a>
+                <a class="btn-cadastro btn-desafio" href="{% url 'relatorio' desafio.id %}">Relatório detalhado</a>
             </div>
         </div>
 
