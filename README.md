@@ -60,13 +60,22 @@ Depois, acesse http://127.0.0.1:8000 para usar a aplicação, ou http://127.0.0.
 
 
 Estrutura do projeto
+
+
+
 Study/
-├── core/            # configurações (settings.py), URLs e WSGI
-├── usuarios/         # app de cadastro e autenticação
-├── flashcard/        # app de flashcards, desafios e relatórios
-├── templates/         # templates HTML compartilhados
+├── core/  # configurações (settings.py), URLs e WSGI
+
+├── usuarios/  # app de cadastro e autenticação
+
+├── flashcard/  # app de flashcards, desafios e relatórios
+
+├── templates/  # templates HTML compartilhados
+
 ├── manage.py
+
 └── README.md
+
 Autor
 
 Luiz Ricardo, graduado em Gestão da Tecnologia da Informação, em transição para o desenvolvimento back-end com Python.
